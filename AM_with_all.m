@@ -1,13 +1,13 @@
 clear all;
 close all;
-% блок 1 :чтение файла, запись значений в массив, АМ-модуляция, запись в новый файл для последующей демодуляции
-% демодуляция: sound (a, Fs)
+% чтение файла, запись значений в массив, АМ-модуляция, запись в новый файл для последующей демодуляции
+% местная демодуляция массива и запись значений в файл
 
 
 %% модуляция
 sec = 44100;
 samples = [100*sec,105*sec];
-[m_sound,Fs]=audioread('K&Sh.mp3',samples);
+[m_sound,Fs]=audioread('/home/ann/WORK/work_mtlb/mtlb_demodulation/bin/K&Sh.mp3',samples);
 
 m_sound=m_sound(:, 1).';
 
@@ -29,13 +29,13 @@ for i=1:sizex
     datasetx(2*i-1)=real(x_AM(i));
     datasetx(2*i)=imag(x_AM(i));
 end
-
+%{
 fid = fopen('/home/ann/WORK/work_qt/firstSt/Demodulation/Base/test/config/new_test_for_deAM', 'wb'); % здесь путь файла для записи модулированного сигнала
 fwrite(fid,Fc,'uint64');
 fwrite(fid,fd,'uint32');
 fwrite(fid,sizex,'uint64');
 fwrite(fid,datasetx,'double');
-
+%}
 %% демодуляция
 
 y_AM = abs(x_AM)-1;
@@ -45,10 +45,10 @@ datasety=zeros(1,sizey);
 for i=1:sizey
     datasety(i)=y_AM(i);
 end
-
+%{
 fid = fopen('/home/ann/WORK/work_qt/firstSt/Demodulation/Base/test/config/new_output_for_deAM', 'wb'); % здесь путь файла с демодулированным образцовым
 fwrite(fid,datasety,'double');
-
+%}
 
 %% графики
 %{
@@ -57,15 +57,16 @@ U = cos(2*pi*F*t);  % модулирующий
 AM = (1+m*cos(2*pi*F*t)).*cos(2*pi*f*t); % AM-сигнал
 dpf_AM = fft (AM); % спектр
 %}
+dpf_AM = fft (x_AM);
 
-%{
 figure ()
+    plot (t, real(x_AM));
     grid on;
-    plot (t,AM);
     title ('АМ-сигнал');
     xlabel ("t , c");
     ylabel("уровень сигнала");
-    
+    saveas(gcf, 'jpg./АМ-сигнал.jpg', 'jpg')
+%{    
 figure ()
     plot (t,u);
     title ('ВЧ-сигнал');
@@ -77,12 +78,17 @@ figure ();
     title ('НЧ-сигнал');
     xlabel ("t , c");
     ylabel("уровень сигнала");
-
+%}
 figure ();
     plot (abs(dpf_AM));
+    grid on;
     title ('Спектр');
     xlabel ("f, Гц");
     ylabel("уровень сигнала");
-%}
+    saveas(gcf, 'jpg./Спектр АМ-сигнала', 'jpg')
+
+    
+
 %%
+
     
