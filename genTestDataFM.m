@@ -39,7 +39,7 @@ figure (2);
     grid on;
     title ('Спектр');
     xlabel ("f, Гц");
-    ylabel("уровень сигнала");
+    ylabel("уровень спектра");
     saveas(gcf, 'jpg./Спектр FM-сигнала', 'jpg')
 
 %%
@@ -76,7 +76,7 @@ end
 figure (3)
     plot (t, z_M);
     grid on;
-    title ('Демодулированный сигнал FM');
+    title ('Демодулированный сигнал');
     xlabel ("t , c");
     ylabel("уровень сигнала");
     saveas(gcf, 'jpg./Демодулированный сигнал FM.jpg', 'jpg')
